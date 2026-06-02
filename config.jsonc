@@ -1,0 +1,171 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 42,
+    "margin-top": 0,
+    "margin-left": 0,
+    "margin-right": 0,
+    "spacing": 0,
+
+    "modules-left": ["hyprland/workspaces", "hyprland/window"],
+    "modules-center": ["group/island"],
+    "modules-right": ["bluetooth", "pulseaudio", "network", "cpu", "memory", "tray", "custom/idle-inhibit", "custom/power"],
+
+    "group/island": {
+        "orientation": "horizontal",
+        "modules": ["group/island-art", "group/island-core"]
+    },
+
+    "group/island-core": {
+        "orientation": "horizontal",
+        "modules": ["custom/clock"]
+    },
+
+    "group/island-art": {
+        "orientation": "horizontal",
+        "drawer": {
+            "transition-duration": 240,
+            "children-class": "island-reveal",
+            "transition-left-to-right": true
+        },
+        "modules": ["custom/spotify-art", "custom/spotify-meta", "custom/spotify-prev", "custom/spotify-play", "custom/spotify-next", "custom/spotify-shuffle"]
+    },
+
+    "custom/spotify-art": {
+        "exec": "bash ~/.config/waybar/scripts/spotify-art-waybar.sh",
+        "return-type": "json",
+        "interval": 3,
+        "tooltip": true,
+        "escape": false
+    },
+
+    "custom/spotify-meta": {
+        "exec": "bash ~/.config/waybar/scripts/spotify-meta.sh",
+        "exec-if": "bash ~/.config/waybar/scripts/spotify-active.sh",
+        "return-type": "json",
+        "hide-empty-text": true,
+        "interval": 3,
+        "format": "{}",
+        "tooltip": true,
+        "escape": false
+    },
+
+    "custom/spotify-prev": {
+        "exec": "printf '󰒮\\n'",
+        "exec-if": "bash ~/.config/waybar/scripts/spotify-active.sh",
+        "hide-empty-text": true,
+        "interval": 2,
+        "format": "{}",
+        "on-click": "playerctl -p spotify previous",
+        "tooltip": false
+    },
+
+    "custom/spotify-play": {
+        "exec": "bash ~/.config/waybar/scripts/spotify-play.sh",
+        "exec-if": "bash ~/.config/waybar/scripts/spotify-active.sh",
+        "hide-empty-text": true,
+        "interval": 2,
+        "format": "{}",
+        "on-click": "playerctl -p spotify play-pause",
+        "tooltip": false,
+        "escape": false
+    },
+
+    "custom/spotify-next": {
+        "exec": "printf '󰒭\\n'",
+        "exec-if": "bash ~/.config/waybar/scripts/spotify-active.sh",
+        "hide-empty-text": true,
+        "interval": 2,
+        "format": "{}",
+        "on-click": "playerctl -p spotify next",
+        "tooltip": false
+    },
+
+    "custom/spotify-shuffle": {
+        "exec": "bash ~/.config/waybar/scripts/spotify-shuffle.sh",
+        "exec-if": "bash ~/.config/waybar/scripts/spotify-active.sh",
+        "return-type": "json",
+        "hide-empty-text": true,
+        "interval": 3,
+        "format": "{}",
+        "on-click": "playerctl -p spotify shuffle toggle",
+        "tooltip": false
+    },
+
+    "custom/clock": {
+        "exec": "bash ~/.config/waybar/scripts/clock-render.sh",
+        "return-type": "json",
+        "interval": 10,
+        "on-click": "bash ~/.config/waybar/scripts/clock-toggle.sh",
+        "tooltip": true,
+        "escape": false
+    },
+
+    "hyprland/workspaces": {
+        "format": "{icon}",
+        "on-click": "activate",
+        "format-icons": {
+            "1": "󰲠", "2": "󰲢", "3": "󰲤", "4": "󰲦", "5": "󰲨",
+            "active": "󱓻", "default": "○", "urgent": "⬤"
+        },
+        "sort-by-number": true,
+        "persistent-workspaces": { "*": [1, 2, 3, 4, 5] }
+    },
+
+    "hyprland/window": {
+        "format": "  {}",
+        "max-length": 40,
+        "separate-outputs": true
+    },
+
+    "bluetooth": {
+        "format": "󰂯",
+        "format-connected": "󰂱 {device_alias}",
+        "format-disabled": "󰂲",
+        "on-click": "blueman-manager"
+    },
+
+    "pulseaudio": {
+        "format": "{icon}  {volume}%",
+        "format-muted": "󰝟  muted",
+        "format-icons": { "default": ["󰕿", "󰖀", "󰕾"] },
+        "on-click": "pavucontrol",
+        "scroll-step": 5,
+        "max-volume": 3000
+    },
+
+    "network": {
+        "format-wifi": "󰤨  {essid}",
+        "format-ethernet": "󰈀  {ifname}",
+        "format-disconnected": "󰤭  offline",
+        "on-click": "bash /home/toby/.local/bin/rofi-wifi"
+    },
+
+    "cpu": {
+        "format": "󰻠  {usage}%",
+        "interval": 2,
+        "tooltip": false
+    },
+
+    "memory": {
+        "format": "󰍛  {used:.1f}G",
+        "interval": 5
+    },
+
+    "tray": { "icon-size": 16, "spacing": 8 },
+
+    "custom/idle-inhibit": {
+        "exec": "~/.local/bin/hypridle-inhibit status",
+        "return-type": "json",
+        "interval": 5,
+        "on-click": "~/.local/bin/hypridle-snooze-menu",
+        "on-click-right": "~/.local/bin/hypridle-inhibit resume",
+        "tooltip": true
+    },
+
+    "custom/power": {
+        "format": "⏻",
+        "on-click": "rofi -show drun -theme ~/.config/rofi/lunar.rasi",
+        "tooltip": false
+    }
+}

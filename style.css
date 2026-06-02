@@ -1,0 +1,207 @@
+@import "albumart.css";
+
+/* ── Reset ─────────────────────────────────────────── */
+* {
+    font-family: 'Nunito', 'JetBrainsMono Nerd Font', 'Noto Sans Symbols2', sans-serif;
+    font-size: 13px;
+    border: none;
+    border-radius: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+}
+
+/* ── Bar ───────────────────────────────────────────── */
+window#waybar {
+    background: rgba(13, 10, 26, 0.95);
+    border-bottom: 1px solid rgba(242, 131, 58, 0.18);
+    color: #F0EAD6;
+}
+
+.modules-left   { padding-left: 15px; }
+.modules-center { padding: 0 10px; }
+.modules-right  { padding-right: 15px; }
+
+/* ── Workspaces ────────────────────────────────────── */
+#workspaces { padding: 0 4px; }
+#workspaces button {
+    color: rgba(240, 234, 214, 0.35);
+    background: transparent;
+    padding: 0 7px;
+    margin: 4px 1px;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.2s;
+}
+#workspaces button:hover { color: #F2833A; background: rgba(242, 131, 58, 0.12); }
+#workspaces button.active {
+    color: #F2833A;
+    background: rgba(242, 131, 58, 0.15);
+    box-shadow: 0 0 16px rgba(242, 131, 58, 0.4);
+    font-size: 17px;
+}
+#workspaces button.urgent { color: #C0345D; background: rgba(192, 52, 93, 0.2); }
+
+/* ── Window title ──────────────────────────────────── */
+#window {
+    color: rgba(240, 234, 214, 0.55);
+    padding: 0 12px;
+    font-size: 12px;
+    font-style: italic;
+}
+
+/* ── Island group container ────────────────────────── */
+#group-island {
+    background: transparent;
+    border: none;
+    margin: 3px 0;
+}
+
+/* ── Art container ─────────────────────────────────── */
+#group-island-art {
+    background: rgba(22, 38, 60, 0.86);
+    border: 1px solid rgba(103, 215, 255, 0.14);
+    border-radius: 14px;
+    min-height: 30px;
+    margin: 0 0 0 0;
+    padding: 3px 6px;
+    transition: background 180ms ease, border-color 180ms ease;
+}
+
+#group-island:hover #group-island-art,
+#group-island-art:hover {
+    background: rgba(22, 38, 60, 0.94);
+    border-color: rgba(103, 215, 255, 0.52);
+}
+
+/* ── Spotify art image ─────────────────────────────── */
+#custom-spotify-art {
+    min-height: 28px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none;
+    border-radius: 6px;
+    min-width: 38px;
+    margin: 0 6px 0 0;
+    padding: 0;
+}
+
+#custom-spotify-art.empty {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+}
+
+#custom-spotify-prev,
+#custom-spotify-play,
+#custom-spotify-next,
+#custom-spotify-shuffle,
+#custom-spotify-meta {
+    color: #9de7ff;
+    background: transparent;
+    border: none;
+    padding: 0 7px;
+    margin: 0;
+    font-size: 14px;
+    min-width: 14px;
+    transition: color 180ms ease, background 180ms ease;
+}
+
+#custom-spotify-meta {
+    color: #e8f8ff;
+    font-size: 12px;
+    min-width: 160px;
+}
+
+#custom-spotify-prev:hover,
+#custom-spotify-next:hover { color: #f2833a; }
+#custom-spotify-play { color: #f2833a; }
+#custom-spotify-play { font-size: 16px; }
+
+#custom-spotify-shuffle.on  { color: #ffb45c; }
+#custom-spotify-shuffle.off { color: rgba(127, 156, 183, 0.6); }
+
+#custom-spotify-meta.paused { color: rgba(127, 156, 183, 0.7); }
+
+#group-island .island-reveal {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+#group-island:hover .island-reveal {
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+/* ── Clock ─────────────────────────────────────────── */
+#group-island-core {
+    background: transparent;
+    border: none;
+    margin-left: 8px;
+}
+
+#custom-clock {
+    font-family: 'Cinzel', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #F2833A;
+    padding: 0 16px;
+    letter-spacing: 0.06em;
+    text-shadow: 0 0 20px rgba(242, 131, 58, 0.6);
+    background: rgba(242, 131, 58, 0.12);
+    border: 1px solid rgba(255, 180, 92, 0.30);
+    border-radius: 14px;
+    margin: 0;
+    transition: all 0.2s;
+}
+
+#custom-clock:hover,
+#custom-clock.playing {
+    background: rgba(103, 215, 255, 0.18);
+    border-color: rgba(103, 215, 255, 0.42);
+    color: #9de7ff;
+}
+
+/* ── Right modules ─────────────────────────────────── */
+#pulseaudio, #network, #cpu, #memory, #battery,
+#tray, #custom-power, #bluetooth, #custom-idle-inhibit {
+    color: rgba(240, 234, 214, 0.75);
+    padding: 0 12px;
+    margin: 4px 2px;
+    border-radius: 10px;
+    transition: all 0.2s;
+}
+
+#bluetooth { color: #F0EAD6; }
+#pulseaudio { color: #C09BD0; }
+#pulseaudio.muted { color: rgba(240, 234, 214, 0.3); }
+#network.disconnected { color: #C0345D; }
+#cpu { color: #F0A070; }
+#memory { color: #A07BC0; }
+#battery { color: #8FC07A; }
+#battery.warning { color: #F2B83A; }
+#battery.critical { color: #C0345D; }
+#battery.charging, #battery.plugged { color: #7AC0A0; }
+#tray { padding: 0 8px; }
+
+#custom-power {
+    color: #C0345D;
+    font-size: 16px;
+    padding: 0 14px 0 10px;
+}
+#custom-power:hover { color: #F0EAD6; background: rgba(192, 52, 93, 0.3); }
+
+#custom-idle-inhibit.active {
+    color: #F2B83A;
+    background: rgba(242, 184, 58, 0.15);
+    box-shadow: 0 0 12px rgba(242, 184, 58, 0.35);
+}
+
+/* ── Tooltips ──────────────────────────────────────── */
+tooltip {
+    background: rgba(13, 10, 26, 0.92);
+    border: 1px solid rgba(242, 131, 58, 0.3);
+    border-radius: 10px;
+    color: #F0EAD6;
+}
