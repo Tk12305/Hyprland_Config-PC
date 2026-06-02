@@ -1,0 +1,169 @@
+* {
+    font-family: 'Nunito', 'JetBrainsMono Nerd Font', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    border: none;
+    border-radius: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+}
+
+window#waybar {
+    background: transparent;
+}
+
+.modules-left,
+.modules-center,
+.modules-right {
+    background: rgba(13, 10, 26, 0.82);
+    border: 1px solid rgba(242, 131, 58, 0.18);
+    border-radius: 14px;
+    padding: 0 6px;
+    margin: 0 4px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.55);
+}
+
+#workspaces {
+    padding: 0 4px;
+}
+
+#workspaces button {
+    color: rgba(240, 234, 214, 0.35);
+    background: transparent;
+    padding: 0 7px;
+    margin: 4px 1px;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+#workspaces button:hover {
+    color: #F2833A;
+    background: rgba(242, 131, 58, 0.12);
+}
+
+#workspaces button.active {
+    color: #F2833A;
+    background: rgba(242, 131, 58, 0.15);
+    font-size: 17px;
+}
+
+#workspaces button.urgent {
+    color: #C0345D;
+    background: rgba(192, 52, 93, 0.2);
+}
+
+#window {
+    color: rgba(240, 234, 214, 0.55);
+    padding: 0 12px;
+    font-size: 12px;
+    font-style: italic;
+}
+
+#clock {
+    font-family: 'Cinzel', 'Nunito', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #F2833A;
+    padding: 0 18px;
+    letter-spacing: 0.06em;
+}
+
+#pulseaudio,
+#network,
+#cpu,
+#memory,
+#battery,
+#tray,
+#custom-power {
+    color: rgba(240, 234, 214, 0.75);
+    padding: 0 12px;
+    margin: 4px 2px;
+    border-radius: 10px;
+}
+
+#pulseaudio:hover,
+#network:hover,
+#cpu:hover,
+#memory:hover,
+#battery:hover {
+    color: #F0EAD6;
+    background: rgba(75, 34, 114, 0.35);
+}
+
+#pulseaudio {
+    color: #C09BD0;
+}
+
+#pulseaudio.muted {
+    color: rgba(240, 234, 214, 0.3);
+}
+
+#network.disconnected {
+    color: #C0345D;
+}
+
+#cpu {
+    color: #F0A070;
+}
+
+#memory {
+    color: #A07BC0;
+}
+
+#battery {
+    color: #8FC07A;
+}
+
+#battery.warning {
+    color: #F2B83A;
+}
+
+#battery.critical {
+    color: #C0345D;
+}
+
+#battery.charging,
+#battery.plugged {
+    color: #7AC0A0;
+}
+
+#tray {
+    padding: 0 8px;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+    background-color: rgba(192, 52, 93, 0.2);
+    border-radius: 6px;
+}
+
+#custom-power {
+    color: #C0345D;
+    font-size: 16px;
+    padding: 0 14px 0 10px;
+}
+
+#custom-power:hover {
+    color: #F0EAD6;
+    background: rgba(192, 52, 93, 0.3);
+}
+
+tooltip {
+    background: rgba(13, 10, 26, 0.92);
+    border: 1px solid rgba(242, 131, 58, 0.3);
+    border-radius: 10px;
+    color: #F0EAD6;
+}
+
+tooltip label {
+    padding: 6px 10px;
+}
+#bluetooth { color: #F0EAD6; padding: 0 12px; margin: 4px 2px; border-radius: 10px; }
+#custom-idle-inhibit { color: rgba(240,234,214,0.55); padding: 0 12px; margin: 4px 2px; border-radius: 10px; transition: all 0.2s; }
+#custom-idle-inhibit.active { color: #F2B83A; background: rgba(242,184,58,0.15); box-shadow: 0 0 12px rgba(242,184,58,0.35); }
+#custom-idle-inhibit:hover { background: rgba(242,184,58,0.1); }
