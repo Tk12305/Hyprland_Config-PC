@@ -1,0 +1,107 @@
+# ╔══════════════════════════════════════════════════════╗
+# ║         HYPRLOCK CONFIG — WOLF OF THE NIGHT          ║
+# ╚══════════════════════════════════════════════════════╝
+
+general {
+    hide_cursor = true
+    grace = 0
+    no_fade_in = false
+    no_fade_out = false
+    ignore_empty_input = true
+}
+
+# ── Background ───────────────────────────────────────────────────────
+background {
+    monitor =
+    path = /home/toby/Pictures/blackwolfshadow1-wolf-of-the-night.jpg
+    blur_size = 4
+    blur_passes = 2
+    brightness = 0.7
+    contrast = 1.0
+    vibrancy = 0.2
+    vibrancy_darkness = 0.0
+}
+
+# ── Time ─────────────────────────────────────────────────────────────
+label {
+    monitor =
+    text = cmd[update:1000] echo "<b>$(date +"%H:%M")</b>"
+    color = rgba(F0EAD6ff)
+    font_size = 80
+    font_family = Cinzel Bold
+    position = 0, 220
+    halign = center
+    valign = center
+    shadow_passes = 2
+    shadow_size = 4
+    shadow_color = rgba(0D0A1Acc)
+}
+
+# ── Date ─────────────────────────────────────────────────────────────
+label {
+    monitor =
+    text = cmd[update:60000] echo "$(date +"%A, %d %B %Y")"
+    color = rgba(C0345Dcc)
+    font_size = 18
+    font_family = Cinzel Bold
+    position = 0, 140
+    halign = center
+    valign = center
+    shadow_passes = 1
+    shadow_size = 3
+    shadow_color = rgba(0D0A1Aaa)
+}
+
+# ── Password input ────────────────────────────────────────────────────
+input-field {
+    monitor =
+    size = 320, 52
+    outline_thickness = 2
+    dots_size = 0.28
+    dots_spacing = 0.18
+    dots_center = true
+    dots_rounding = -1
+    outer_color = rgba(C0345D99)
+    inner_color = rgba(0D0A1Acc)
+    font_color = rgba(F0EAD6ff)
+    fade_on_empty = true
+    fade_timeout = 1000
+    placeholder_text = <span foreground="##C0345D"></span>
+    hide_input = false
+    rounding = 12
+    check_color = rgba(F2833Aff)
+    fail_color = rgba(C0345Dff)
+    fail_text = <i>$FAIL <b>($ATTEMPTS)</b></i>
+    fail_timeout = 2000
+    capslock_color = rgba(F2B83Aff)
+    position = 0, 200
+    halign = center
+    valign = bottom
+}
+
+# ── Status message (locked / wrong password) ─────────────────────────
+label {
+    monitor =
+    text = $LAYOUT
+    color = rgba(F0EAD688)
+    font_size = 13
+    font_family = Nunito
+    position = 0, 260
+    halign = center
+    valign = bottom
+}
+
+# ── User ─────────────────────────────────────────────────────────────
+label {
+    monitor =
+    text =   $USER
+    color = rgba(F0EAD6bb)
+    font_size = 14
+    font_family = Nunito
+    position = 0, 290
+    halign = center
+    valign = bottom
+    shadow_passes = 1
+    shadow_size = 2
+    shadow_color = rgba(0D0A1Aaa)
+}

@@ -1,0 +1,75 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 42,
+    "margin-top": 8,
+    "margin-left": 16,
+    "margin-right": 16,
+    "spacing": 0,
+    "modules-left": ["hyprland/workspaces","hyprland/window"],
+    "modules-center": ["clock"],
+    "modules-right": ["pulseaudio","network","bluetooth","cpu","memory","tray","custom/idle-inhibit","custom/power"],
+
+    "hyprland/workspaces": {
+        "format": "{icon}",
+        "on-click": "activate",
+        "format-icons": {"1":"󰲠","2":"󰲢","3":"󰲤","4":"󰲦","5":"󰲨","active":"󱓻","default":"○","urgent":"⬤"},
+        "sort-by-number": true,
+        "persistent-workspaces": {"*": [1,2,3,4,5]}
+    },
+    "hyprland/window": {"format": "  {}","max-length": 40,"separate-outputs": true},
+    "clock": {
+        "format": "  {:%H:%M}",
+        "format-alt": "  {:%A, %d %B %Y}",
+        "tooltip-format": "<tt><small>{calendar}</small></tt>",
+        "calendar": {
+            "mode": "month",
+            "weeks-pos": "left",
+            "on-scroll": 1,
+            "format": {
+                "months": "<span color='#F2833A'><b>{}</b></span>",
+                "days": "<span color='#E8C5A0'>{}</span>",
+                "weeks": "<span color='#7B5EA7'>W{}</span>",
+                "weekdays": "<span color='#C0345D'><b>{}</b></span>",
+                "today": "<span color='#F2833A'><b><u>{}</u></b></span>"
+            }
+        }
+    },
+    "pulseaudio": {
+        "format": "{icon}  {volume}%",
+        "format-muted": "󰝟  muted",
+        "format-icons": {"headphone":"󰋋","hands-free":"󰋎","headset":"󰋎","phone":"","portable":"","car":"","default":["󰕿","󰖀","󰕾"]},
+        "on-click": "pavucontrol",
+        "scroll-step": 5
+    },
+    "network": {
+        "format-wifi": "󰤨  {essid}",
+        "format-ethernet": "󰈀  {ifname}",
+        "format-disconnected": "󰤭  offline",
+        "tooltip-format": "{ifname}: {ipaddr}\n{gwaddr} — {signalStrength}%",
+        "on-click": "nm-connection-editor"
+    },
+    "bluetooth": {
+        "format": "󰂯",
+        "format-connected": "󰂱  {device_alias}",
+        "format-connected-battery": "󰂱  {device_alias} {device_battery_percentage}%",
+        "on-click": "blueman-manager",
+        "tooltip-format": "{controller_alias}\n{num_connections} connected"
+    },
+    "cpu": {"format": "󰻠  {usage}%","interval": 2,"tooltip": false},
+    "memory": {"format": "󰍛  {used:.1f}G","interval": 5,"tooltip-format": "{used:.1f} GiB / {total:.1f} GiB"},
+    "tray": {"icon-size": 16,"spacing": 8},
+    "custom/idle-inhibit": {
+        "exec": "~/.local/bin/hypridle-inhibit status",
+        "return-type": "json",
+        "interval": 5,
+        "on-click": "~/.local/bin/hypridle-snooze-menu",
+        "on-click-right": "~/.local/bin/hypridle-inhibit resume",
+        "tooltip": true
+    },
+    "custom/power": {
+        "format": "⏻",
+        "on-click": "rofi -show drun -theme ~/.config/rofi/lunar.rasi",
+        "tooltip": false
+    }
+}

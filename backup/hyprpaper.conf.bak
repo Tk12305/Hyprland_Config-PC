@@ -1,0 +1,14 @@
+wallpaper {
+    monitor = HDMI-A-1
+    path = /home/toby/Pictures/blackwolfshadow1-wolf-of-the-night.jpg
+    fit_mode = cover
+}
+
+wallpaper {
+    monitor = *
+    path = /home/toby/Pictures/blackwolfshadow1-wolf-of-the-night.jpg
+    fit_mode = cover
+}
+
+ipc = on
+splash = false
