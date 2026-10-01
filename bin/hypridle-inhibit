@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+
+STATE_FILE="/tmp/hypridle-inhibit.state"
+
+start_hypridle() {
+  pgrep -x hypridle >/dev/null || hypridle &
+}
+
+stop_hypridle() {
+  pkill -x hypridle
+}
+
+case "$1" in
+status)
+  if [[ -f "$STATE_FILE" ]]; then
+    VALUE=$(cat "$STATE_FILE")
+
+    if [[ "$VALUE" == "indefinite" ]]; then
+      printf '{"text":"󰒳 Paused ∞","class":"active"}\n'
+      exit 0
+    fi
+
+    NOW=$(date +%s)
+
+    if ((NOW >= VALUE)); then
+      rm -f "$STATE_FILE"
+      start_hypridle
+      printf '{"text":"󰒳","class":""}\n'
+      exit 0
+    fi
+
+    REMAINING=$((VALUE - NOW))
+    HOURS=$((REMAINING / 3600))
+    MINS=$(((REMAINING % 3600) / 60))
+    SECS=$((REMAINING % 60))
+
+    if ((HOURS > 0)); then
+      printf '{"text":"󰒳 Paused %d:%02d:%02d","class":"active"}\n' \
+        "$HOURS" "$MINS" "$SECS"
+    else
+      printf '{"text":"󰒳 Paused %02d:%02d","class":"active"}\n' \
+        "$MINS" "$SECS"
+    fi
+  else
+    printf '{"text":"󰒳","class":""}\n'
+  fi
+  ;;
+
+snooze)
+  MINUTES="${2:-10}"
+  END_TIME=$(($(date +%s) + (MINUTES * 60)))
+
+  echo "$END_TIME" >"$STATE_FILE"
+  stop_hypridle
+  ;;
+
+toggle)
+  echo "indefinite" >"$STATE_FILE"
+  stop_hypridle
+  ;;
+
+resume)
+  rm -f "$STATE_FILE"
+  start_hypridle
+  ;;
+
+esac

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# hypridle-snooze-menu — rofi picker for swayidle snooze duration
+
+THEME="$HOME/.config/rofi/lunar.rasi"
+
+options="󰒳  10 minutes\n󰒳  30 minutes\n󰒳  1 hour\n󰒳  Indefinite\n󰒲  Resume now"
+
+chosen=$(printf "$options" | rofi -dmenu -p "Idle inhibit" -theme "$THEME" -lines 5)
+
+case "$chosen" in
+*"10 minutes") ~/.local/bin/hypridle-inhibit snooze 10 ;;
+*"30 minutes") ~/.local/bin/hypridle-inhibit snooze 30 ;;
+*"1 hour") ~/.local/bin/hypridle-inhibit snooze 60 ;;
+*"Indefinite") ~/.local/bin/hypridle-inhibit toggle ;;
+*"Resume now") ~/.local/bin/hypridle-inhibit resume ;;
+esac

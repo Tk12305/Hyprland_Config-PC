@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+# rofi-wifi — simple WiFi picker using nmcli + rofi
+
+NOTIFY() { notify-send -a "rofi-wifi" "$1" "$2" 2>/dev/null; }
+
+bar() {
+    local s=$1
+    [ "$s" -ge 75 ] && echo "IIII" && return
+    [ "$s" -ge 50 ] && echo "III." && return
+    [ "$s" -ge 25 ] && echo "II.." && return
+    echo "I..."
+}
+
+list_networks() {
+    nmcli --colors no -t -f IN-USE,SSID,SIGNAL,SECURITY dev wifi list 2>/dev/null \
+        | sort -t: -k3 -rn \
+        | awk -F: '!seen[$2]++ && $2!=""' \
+        | while IFS=: read -r inuse ssid signal security; do
+            b=$(bar "$signal")
+            lock=$([ -n "$security" ] && echo "[S]" || echo "   ")
+            active=$([ "$inuse" = "*" ] && echo "[*]" || echo "   ")
+            printf "%s %s %s  %s\n" "$active" "$lock" "$b" "$ssid"
+        done
+}
+
+THEME="$HOME/.config/rofi/wifi.rasi"
+OPT_RESCAN="[R]  Rescan networks"
+OPT_DISC="[X]  Disconnect"
+OPT_MANUAL="[+]  Enter SSID manually"
+SEP="----------------------------"
+
+while true; do
+    nets=$(list_networks)
+    choice=$(printf '%s\n%s\n%s\n%s\n%s' \
+        "$OPT_RESCAN" "$OPT_DISC" "$OPT_MANUAL" "$SEP" "$nets" \
+        | rofi -dmenu \
+            -theme "$THEME" \
+            -p "  WiFi" \
+            -no-custom \
+            -selected-row 4 \
+            -i)
+
+    [ -z "$choice" ] && exit 0
+
+    case "$choice" in
+        "$OPT_RESCAN")
+            NOTIFY "WiFi" "Rescanning..."
+            nmcli dev wifi rescan 2>/dev/null
+            sleep 2
+            continue
+            ;;
+        "$OPT_DISC")
+            cur=$(nmcli -t -f NAME,TYPE,STATE con show \
+                | awk -F: '$2=="802-11-wireless" && $3=="activated" {print $1; exit}')
+            if [ -n "$cur" ]; then
+                nmcli con down "$cur" && NOTIFY "WiFi" "Disconnected from $cur"
+            else
+                NOTIFY "WiFi" "No active WiFi connection"
+            fi
+            exit 0
+            ;;
+        "$OPT_MANUAL")
+            ssid=$(rofi -dmenu -theme "$THEME" -p "  SSID" -l 0)
+            [ -z "$ssid" ] && continue
+            ;;
+        "$SEP")
+            continue
+            ;;
+        *)
+            ssid=$(echo "$choice" | sed 's/^.\{14\}//')
+            ;;
+    esac
+
+    # Try saved profile first
+    if nmcli con show "$ssid" &>/dev/null; then
+        nmcli con up "$ssid" \
+            && NOTIFY "WiFi" "Connected to $ssid" \
+            || NOTIFY "WiFi" "Failed to connect to $ssid"
+        exit 0
+    fi
+
+    # New network — prompt for password if secured
+    sec=$(nmcli --colors no -t -f SSID,SECURITY dev wifi list \
+        | awk -F: -v s="$ssid" '$1==s {print $2; exit}')
+
+    if [ -n "$sec" ]; then
+        pass=$(rofi -dmenu -theme "$THEME" -p "  Password" -password -l 0)
+        [ -z "$pass" ] && continue
+        nmcli dev wifi connect "$ssid" password "$pass" \
+            && NOTIFY "WiFi" "Connected to $ssid" \
+            || NOTIFY "WiFi" "Wrong password or failed"
+    else
+        nmcli dev wifi connect "$ssid" \
+            && NOTIFY "WiFi" "Connected to $ssid" \
+            || NOTIFY "WiFi" "Failed to connect to $ssid"
+    fi
+    exit 0
+done

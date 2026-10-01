@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+# rofi-smb — mount/unmount SMB shares via rofi
+# Keybind: SUPER+N
+# Credentials: ~/.smb-credentials (chmod 600)
+
+CRED_FILE="$HOME/.smb-credentials"
+MOUNT_BASE="/mnt/smb"
+THEME="$HOME/.config/rofi/lunar.rasi"
+
+SHARES=(
+    "Pool1|//100.98.42.67/Pool1"
+)
+
+NOTIFY() { notify-send -a "SMB" "$1" "$2" 2>/dev/null; }
+
+if [ ! -f "$CRED_FILE" ]; then
+    NOTIFY "SMB" "No credentials file found at $CRED_FILE"
+    exit 1
+fi
+chmod 600 "$CRED_FILE" 2>/dev/null
+
+# Build main menu entries with mount status
+entries=()
+for share_def in "${SHARES[@]}"; do
+    label="${share_def%%|*}"
+    smb_path="${share_def##*|}"
+    safe=$(printf '%s' "$smb_path" | tr '/\\:.' '_' | sed 's/^_*//')
+    mnt="$MOUNT_BASE/$safe"
+    if mountpoint -q "$mnt" 2>/dev/null; then
+        entries+=("  $label  [mounted]")
+    else
+        entries+=("   $label")
+    fi
+done
+
+chosen_idx=$(printf '%s\n' "${entries[@]}" \
+    | rofi -dmenu \
+        -theme "$THEME" \
+        -p " SMB" \
+        -i \
+        -no-custom \
+        -format i)
+
+[ -z "$chosen_idx" ] && exit 0
+
+chosen_def="${SHARES[$chosen_idx]}"
+label="${chosen_def%%|*}"
+smb_path="${chosen_def##*|}"
+safe=$(printf '%s' "$smb_path" | tr '/\\:.' '_' | sed 's/^_*//')
+mnt="$MOUNT_BASE/$safe"
+
+if mountpoint -q "$mnt" 2>/dev/null; then
+    # Already mounted — show action submenu
+    action=$(printf '  Open in Files\n  Unmount\n  Cancel' \
+        | rofi -dmenu \
+            -theme "$THEME" \
+            -p " $label" \
+            -i \
+            -no-custom)
+
+    case "$action" in
+        *"Open in Files"*)
+            nautilus "$mnt" 2>/dev/null &
+            ;;
+        *"Unmount"*)
+            if sudo umount "$mnt" 2>/tmp/rofi-smb.err; then
+                NOTIFY "SMB" "Unmounted $label"
+                sudo rmdir "$mnt" 2>/dev/null
+            else
+                NOTIFY "SMB" "Failed to unmount $label — $(cat /tmp/rofi-smb.err)"
+            fi
+            ;;
+        *)
+            exit 0
+            ;;
+    esac
+else
+    # Not mounted — mount it
+    sudo mkdir -p "$mnt"
+    OPTS="credentials=$CRED_FILE,iocharset=utf8,vers=3.0,uid=$(id -u),gid=$(id -g),file_mode=0664,dir_mode=0775"
+    if sudo mount -t cifs "$smb_path" "$mnt" -o "$OPTS" 2>/tmp/rofi-smb.err; then
+        NOTIFY "SMB" "Mounted $label → $mnt"
+        nautilus "$mnt" 2>/dev/null &
+    else
+        NOTIFY "SMB" "Failed: $label — $(cat /tmp/rofi-smb.err)"
+        sudo rmdir "$mnt" 2>/dev/null
+    fi
+fi
